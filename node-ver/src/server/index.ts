@@ -1,5 +1,6 @@
 import 'module-alias/register';
 import express from 'express'; 
+import mysql from 'mysql2'
 
 const app = express(); 
 const port = 3031; 
@@ -8,9 +9,12 @@ const port = 3031;
 import cookieParser from 'cookie-parser'; 
 const config = require('@config/key');
 
-// mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-// .then(()=>console.log('DB connected'))
-// .catch(err=>console.log(err)); // 아래 3줄 추가 
+mysql.createConnection({
+  host: 'localhost',
+  user: 'cvs_user',
+  password: 'Cvs1234!@#$',
+  database: 'cvsguru'
+})
 
 app.use(express.json()); 
 app.use(express.urlencoded({extended : true }));

@@ -1,0 +1,71 @@
+-- cvsguru.user_info definition
+
+CREATE TABLE `user_info` (
+  `user_id` varchar(30) NOT NULL COMMENT '유저아이디',
+  `password` varchar(300) NOT NULL COMMENT '비밀번호',
+  `user_name` varchar(100) NOT NULL COMMENT '유저이름',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- cvsguru.item_rate_user definition
+
+CREATE TABLE `item_rate_user` (
+  `item_id` varchar(100) NOT NULL COMMENT '물건ID',
+  `user_id` varchar(30) NOT NULL COMMENT '유저ID',
+  `item_score` varchar(100) DEFAULT NULL COMMENT '평점',
+  PRIMARY KEY (`item_id`,`user_id`),
+  KEY `item_rate_user_FK` (`user_id`),
+  CONSTRAINT `item_rate_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `item_rate_user_FK_1` FOREIGN KEY (`item_id`) REFERENCES `item_info` (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- cvsguru.item_rate_group definition
+
+CREATE TABLE `item_rate_group` (
+  `item_id` varchar(100) NOT NULL COMMENT '물건ID',
+  `item_score` varchar(100) DEFAULT NULL COMMENT '평점',
+  `score_count` varchar(100) DEFAULT NULL COMMENT '물건평점 수',
+  PRIMARY KEY (`item_id`),
+  CONSTRAINT `item_rate_group_FK` FOREIGN KEY (`item_id`) REFERENCES `item_info` (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- cvsguru.store_info definition
+
+CREATE TABLE `store_info` (
+  `store_id` varchar(100) NOT NULL COMMENT '편의점ID',
+  `store_kind` varchar(100) NOT NULL COMMENT '편의점종류',
+  `store_name` varchar(100) NOT NULL COMMENT '편의점이름',
+  PRIMARY KEY (`store_id`,`store_kind`),
+  KEY `store_info_FK` (`store_kind`),
+  CONSTRAINT `store_info_FK` FOREIGN KEY (`store_kind`) REFERENCES `store_group` (`store_kind`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- cvsguru.store_group definition
+
+CREATE TABLE `store_group` (
+  `store_kind` varchar(100) NOT NULL COMMENT '편의점종류',
+  PRIMARY KEY (`store_kind`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- cvsguru.item_info definition
+
+CREATE TABLE `item_info` (
+  `item_id` varchar(100) NOT NULL COMMENT '물건ID',
+  `store_kind` varchar(100) NOT NULL COMMENT '편의점종류',
+  `item_name` varchar(100) NOT NULL,
+  `item_category` varchar(100) DEFAULT NULL COMMENT '카테고리',
+  `item_price` decimal(10,0) DEFAULT NULL COMMENT '금액',
+  `item_image` varchar(100) DEFAULT NULL COMMENT '물건이미지',
+  PRIMARY KEY (`item_id`),
+  KEY `item_info_FK` (`store_kind`),
+  CONSTRAINT `item_info_FK` FOREIGN KEY (`store_kind`) REFERENCES `store_group` (`store_kind`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- cvsguru.base_code definition
+
+CREATE TABLE `base_code` (
+  `code_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '공통코드',
+  `code_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '코드이름',
+  `description` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`code_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
