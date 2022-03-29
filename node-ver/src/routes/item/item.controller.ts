@@ -40,16 +40,14 @@ exports.getItemWithPrice = (req: express.Request, res:express.Response) => {
     .catch((err) => {
       console.log('[masonms] error: ', err)
       connection.end()
+      return res.json(makeResponseFormat('9999', [], 0, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
   } catch (error) {
-    return res.json({
-      result: '9999',
-      data: null,
-      message: error
-    })
+    connection.end()
+    return res.json(makeResponseFormat('9999', [], 0, error))
   }
 }
 
@@ -67,30 +65,22 @@ exports.getItemWithTitle = (req: express.Request, res:express.Response) => {
     connection.promise().query(sql)
     .then( (result: any) => {
       if (result[0].length === 0) {
-        return res.json({
-          result: '0000',
-          message: '상품이 없습니다.'
-        })
+        return res.json(makeResponseFormat('0000', [], 0))
       } else {
-        return res.json({
-          result: '0000',
-          data: result[0]
-        })
+        return res.json(makeResponseFormat('0000', result[0], result[0].length))
       }
     })
     .catch((err) => {
       console.log('[masonms] error: ', err)
       connection.end()
+      return res.json(makeResponseFormat('9999', [], 0, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
   } catch (error) {
-    return res.json({
-      result: '9999',
-      data: null,
-      message: error
-    })
+    connection.end()
+    return res.json(makeResponseFormat('9999', [], 0, error))
   }
 }
 
@@ -106,31 +96,22 @@ exports.getCategoryData = (req: express.Request, res:express.Response) => {
     connection.promise().query(sql)
     .then( (result: any) => {
       if (result[0].length === 0) {
-        return res.json({
-          result: '0000',
-          message: '카테고리 정보가 없습니다.'
-        })
+        return res.json(makeResponseFormat('0000', [], 0))
       } else {
-        return res.json({
-          result: '0000',
-          data: result[0]
-        })
+        return res.json(makeResponseFormat('0000', result[0], result[0].length))
       }
     })
     .catch((err) => {
       console.log('[masonms] error: ', err)
       connection.end()
+      return res.json(makeResponseFormat('9999', [], 0, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
   } catch (error) {
     connection.end()
-    return res.json({
-      result: '9999',
-      data: null,
-      message: error
-    })
+    return res.json(makeResponseFormat('9999', [], 0, error))
   }
 }
 
@@ -148,30 +129,21 @@ exports.getItemWithCategory = (req: express.Request, res:express.Response) => {
     connection.promise().query(sql)
     .then( (result: any) => {
       if (result[0].length === 0) {
-        return res.json({
-          result: '0000',
-          message: '상품이 없습니다.'
-        })
+        return res.json(makeResponseFormat('0000', [], 0))
       } else {
-        return res.json({
-          result: '0000',
-          data: result[0]
-        })
+        return res.json(makeResponseFormat('0000', result[0], result[0].length))
       }
     })
     .catch((err) => {
       console.log('[masonms] error: ', err)
       connection.end()
+      return res.json(makeResponseFormat('9999', [], 0, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
   } catch (error) {
     connection.end()
-    return res.json({
-      result: '9999',
-      data: null,
-      message: error
-    })
+    return res.json(makeResponseFormat('9999', [], 0, error))
   }
 }
