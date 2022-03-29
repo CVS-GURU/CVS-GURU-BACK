@@ -17,6 +17,7 @@ CREATE TABLE `item_info` (
   `item_price` decimal(10,0) DEFAULT NULL COMMENT '금액',
   `item_image` varchar(100) DEFAULT NULL COMMENT '물건이미지',
   `item_description` varchar(1000) DEFAULT NULL COMMENT '상품설명',
+  `insert_date` timestamp NULL DEFAULT NULL COMMENT '상품추가시간',
   PRIMARY KEY (`item_id`),
   KEY `item_info_FK` (`store_kind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -26,7 +27,8 @@ CREATE TABLE `item_info` (
 CREATE TABLE `item_rate_user` (
   `item_id` varchar(100) NOT NULL COMMENT '물건ID',
   `user_id` varchar(30) NOT NULL COMMENT '유저ID',
-  `item_score` varchar(100) DEFAULT NULL COMMENT '평점',
+  `item_score` int DEFAULT NULL COMMENT '평점',
+  `item_comment` varchar(1000) DEFAULT NULL COMMENT '후기',
   PRIMARY KEY (`item_id`,`user_id`),
   KEY `item_rate_user_FK` (`user_id`),
   CONSTRAINT `item_rate_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
