@@ -3,6 +3,8 @@ import mysql from 'mysql2';
 const router = express.Router()
 const config = require('@config/key');
 
+const { makeResponseFormat } = require('../../../middleware/MakeResponse')
+
 const connection = mysql.createPool({
   host: config.dbConnection.host,
   user: config.dbConnection.user,
@@ -30,15 +32,9 @@ exports.getItemWithPrice = (req: express.Request, res:express.Response) => {
     connection.promise().query(sql)
     .then( (result: any) => {
       if (result[0].length === 0) {
-        return res.json({
-          result: '0000',
-          message: '상품이 없습니다.'
-        })
+        return res.json(makeResponseFormat('0000', [], 0))
       } else {
-        return res.json({
-          result: '0000',
-          data: result[0]
-        })
+        return res.json(makeResponseFormat('0000', result[0], result[0].length))
       }
     })
     .catch((err) => {
