@@ -17,7 +17,7 @@ exports.ping = (req: express.Request, res: express.Response) => {
 }
 
 exports.getItemWithPrice = (req: express.Request, res:express.Response) => {
-  const { from_price, to_price } = req.body
+  const { from: from_price, to: to_price } = req.query
   try {
     const sql = `
       select item_name as ITEM_NAME,
@@ -47,9 +47,6 @@ exports.getItemWithPrice = (req: express.Request, res:express.Response) => {
     .then( () => {
       console.log('[masonms] finally then')
     });
-
-    
-    
   } catch (error) {
     return res.json({
       result: '9999',

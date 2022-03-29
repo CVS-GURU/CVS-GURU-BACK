@@ -34,6 +34,6 @@ const itemController = require("./item.controller")
                           }
  *                       ]
  */
-itemRouter.post("/get-item-with-price", itemController.getItemWithPrice)
+itemRouter.get("/get-item-with-price", itemController.getItemWithPrice)
 
 module.exports = itemRouter
