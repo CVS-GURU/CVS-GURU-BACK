@@ -97,3 +97,85 @@ exports.getItemWithTitle = (req: express.Request, res:express.Response) => {
     })
   }
 }
+
+exports.getCategoryData = (req: express.Request, res:express.Response) => {
+  try {
+    const sql = `
+      select code_id as CODE_ID,
+            code_name as CODE_NAME
+      from base_code
+      where code_id like 'CA%';
+    `
+
+    connection.promise().query(sql)
+    .then( (result: any) => {
+      if (result[0].length === 0) {
+        return res.json({
+          result: '0000',
+          message: '카테고리 정보가 없습니다.'
+        })
+      } else {
+        return res.json({
+          result: '0000',
+          data: result[0]
+        })
+      }
+    })
+    .catch((err) => {
+      console.log('[masonms] error: ', err)
+      connection.end()
+    })
+    .then( () => {
+      console.log('[masonms] finally then')
+    });
+  } catch (error) {
+    connection.end()
+    return res.json({
+      result: '9999',
+      data: null,
+      message: error
+    })
+  }
+}
+
+exports.getItemWithCategory = (req: express.Request, res:express.Response) => {
+  const { category } = req.query
+  try {
+    const sql = `
+      select item_name as ITEM_NAME,
+            item_price as ITEM_PRICE,
+            item_image as ITEM_IMAGE
+      from item_info
+      where item_category like '${category}%';
+    `
+
+    connection.promise().query(sql)
+    .then( (result: any) => {
+      if (result[0].length === 0) {
+        return res.json({
+          result: '0000',
+          message: '상품이 없습니다.'
+        })
+      } else {
+        return res.json({
+          result: '0000',
+          data: result[0]
+        })
+      }
+    })
+    .catch((err) => {
+      console.log('[masonms] error: ', err)
+      connection.end()
+    })
+    .then( () => {
+      console.log('[masonms] finally then')
+    });
+  } catch (error) {
+    connection.end()
+    return res.json({
+      result: '9999',
+      data: null,
+      message: error
+    })
+  }
+}
