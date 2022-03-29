@@ -1,4 +1,15 @@
 const dev:Sequrity = { 
   dataMode: 'dev-mode'
-} 
-export default dev;
+}
+
+const dbConnection:DbConnection = {
+  host: 'localhost',
+  user: 'cvs_user',
+  password: 'Cvs1234!@#$',
+  database: 'cvsguru'
+}
+
+export default {
+  dataMode: dev.dataMode,
+  dbConnection
+};

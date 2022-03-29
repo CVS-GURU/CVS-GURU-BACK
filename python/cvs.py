@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from bs4 import BeautifulSoup
@@ -48,7 +49,8 @@ class CVS:
             url = ''
 
         try:
-            response = requests.post(url, data=fetch_params, headers=self.cu_header)
+            response = requests.post(
+                url, data=fetch_params, headers=self.cu_header)
             # print(response.status_code)
             html = response.text
             soup = BeautifulSoup(html, 'html.parser')
@@ -71,7 +73,8 @@ class CVS:
 
 
 if __name__ == "__main__":
-    mysql_database = mysql_helper.mySqlDatabase()
+    # mysql_database = mysql_helper.mySqlDatabase()
     cvs = CVS()
-    product_info_list = cvs.get_cvs_data('1', 'CU')
+    product_info_list = cvs.get_cvs_data('CU', '1')
+    print(product_info_list)
     # insert logic 추가
