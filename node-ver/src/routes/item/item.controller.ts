@@ -166,7 +166,7 @@ exports.getItemDetail = (req: express.Request, res:express.Response) => {
             item_id as ITEM_ID,
             item_category as ITEM_CATEGORY,
             store_kind as STORE_KIND,
-            description as DESCRIPTION
+            item_description as ITEM_DESCRIPTION
       from item_info
       where item_id = '${id}';
     `
