@@ -7,13 +7,6 @@ CREATE TABLE `user_info` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- cvsguru.store_group definition
-
-CREATE TABLE `store_group` (
-  `store_kind` varchar(100) NOT NULL COMMENT '편의점종류',
-  PRIMARY KEY (`store_kind`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 -- cvsguru.item_info definition
 
 CREATE TABLE `item_info` (
@@ -24,8 +17,7 @@ CREATE TABLE `item_info` (
   `item_price` decimal(10,0) DEFAULT NULL COMMENT '금액',
   `item_image` varchar(100) DEFAULT NULL COMMENT '물건이미지',
   PRIMARY KEY (`item_id`),
-  KEY `item_info_FK` (`store_kind`),
-  CONSTRAINT `item_info_FK` FOREIGN KEY (`store_kind`) REFERENCES `store_group` (`store_kind`)
+  KEY `item_info_FK` (`store_kind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- cvsguru.item_rate_user definition
@@ -57,8 +49,7 @@ CREATE TABLE `store_info` (
   `store_kind` varchar(100) NOT NULL COMMENT '편의점종류',
   `store_name` varchar(100) NOT NULL COMMENT '편의점이름',
   PRIMARY KEY (`store_id`,`store_kind`),
-  KEY `store_info_FK` (`store_kind`),
-  CONSTRAINT `store_info_FK` FOREIGN KEY (`store_kind`) REFERENCES `store_group` (`store_kind`)
+  KEY `store_info_FK` (`store_kind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- cvsguru.base_code definition
