@@ -143,4 +143,40 @@ itemRouter.get("/get-category-data", itemController.getCategoryData)
 
 itemRouter.get("/get-item-with-category", itemController.getItemWithCategory)
 
+/**
+ * @swagger
+ *  /api/item/get-item-detail:
+ *   get:
+ *    summary: "상품 상세정보"
+ *    description: ""
+ *    tags: [Items]
+ *    parameters:
+ *    - in: query
+ *      name: id
+ *      required: true
+ *      description: 상품의 아이디
+ *      schema:
+ *        type: string
+ *    responses:
+ *      "200":
+ *      description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              ok:
+ *                type: boolean
+ *              users:
+ *                type: object
+ *                example:
+ *                  [
+ *                    { "id": 1, "name": "유저1" },
+ *                    { "id": 2, "name": "유저2" },
+ *                    { "id": 3, "name": "유저3" }
+ *                  ]
+ */
+
+itemRouter.get("/get-item-detail", itemController.getItemDetail)
+
 module.exports = itemRouter
