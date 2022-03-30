@@ -10,35 +10,68 @@ const itemController = require("./item.controller")
  *      tags: [Items]
  *      parameters:
  *      - in: query
+ *        name: store
+ *        required: false
+ *        description: 편의점 종류
+ *        schema:
+ *          type: string
+ *      - in: query
  *        name: from
- *        required: true
+ *        required: false
  *        description: 최소가격
  *        schema:
  *          type: string
  *      - in: query
  *        name: to
- *        required: true
+ *        required: false
  *        description: 최대가격
  *        schema:
  *          type: string
+ *      - in: query
+ *        name: category
+ *        required: false
+ *        description: 상품 종류
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: title
+ *        required: false
+ *        description: 상품에 포함된 이름
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: sort
+ *        required: false
+ *        description: 정렬순서
+ *        schema:
+ *          type: string
+ *          example: price_desc | price_asc
  *      responses:
  *        "200":
- *          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
+ *          description: 파라미터로 보내는 값의 여부 및 내용에 따라 달라짐
  *          content:
  *            application/json:
  *              schema:
  *                type: object
  *                properties:
- *                result:
- *                  type: string
- *                users:
- *                  type: object
- *                  example:
- *                    [
- *                      { "id": 1, "name": "유저1" },
- *                      { "id": 2, "name": "유저2" },
- *                      { "id": 3, "name": "유저3" }
- *                    ]
+ *                  result:
+ *                    type: string
+ *                    example: "0000"
+ *                  reason:
+ *                    type: string
+ *                    example: "success"
+ *                  data:
+ *                    type: object
+ *                    example:
+ *                      {
+ *                          "HITS": 1,
+ *                          "CONTENTS": [{
+ *                          "ITEM_NAME": "도)백종원데리마요덮밥",
+ *                          "ITEM_PRICE": "3900",
+ *                          "ITEM_IMAGE": "http://bgf-cu.xcache.kinxcdn.com/product/8809196616079.jpg",
+ *                          "ITEM_ID": "14947"
+ *                          }]
+ *                      }
  */
 itemRouter.get("/get-items", itemController.getItems)
 
@@ -51,166 +84,75 @@ itemRouter.get("/get-items", itemController.getItems)
  *      tags: [Items]
  *      responses:
  *        "200":
- *          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
+ *          description: 입력날짜 순 최근 20개의 상품 조회
  *          content:
  *            application/json:
  *              schema:
  *                type: object
  *                properties:
- *                result:
- *                  type: string
- *                users:
- *                  type: object
- *                  example:
- *                    [
- *                      { "id": 1, "name": "유저1" },
- *                      { "id": 2, "name": "유저2" },
- *                      { "id": 3, "name": "유저3" }
- *                    ]
+ *                  result:
+ *                    type: string
+ *                    example: "0000"
+ *                  reason:
+ *                    type: string
+ *                    example: "success"
+ *                  data:
+ *                    type: object
+ *                    example:
+ *                      {
+ *                          "HITS": 1,
+ *                          "CONTENTS": [{
+ *                          "ITEM_NAME": "도)백종원데리마요덮밥",
+ *                          "ITEM_PRICE": "3900",
+ *                          "ITEM_IMAGE": "http://bgf-cu.xcache.kinxcdn.com/product/8809196616079.jpg",
+ *                          "ITEM_ID": "14947"
+ *                          }]
+ *                      }
  */
 itemRouter.get("/get-items-recently", itemController.getItemRecently)
 
 /**
  * @swagger
- *  /api/item/get-items-with-price:
+ *  /api/item/get-category-data:
  *    get:
- *      summary: "가격대를 이용하여 물건 조회"
- *      description: "최소 최대가격을 이용해서 상품을 조회한다"
+ *      summary: "제공 카테고리 조회"
+ *      description: "현재 상품들의 카테고리들을 조회한다"
  *      tags: [Items]
- *      parameters:
- *      - in: query
- *        name: from
- *        required: true
- *        description: 최소가격
- *        schema:
- *          type: string
- *      - in: query
- *        name: to
- *        required: true
- *        description: 최대가격
- *        schema:
- *          type: string
  *      responses:
  *        "200":
- *          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
+ *          description: 현재 공통코드로 제공되는 카테고리를 제공
  *          content:
  *            application/json:
  *              schema:
  *                type: object
  *                properties:
- *                result:
- *                  type: string
- *                users:
- *                  type: object
- *                  example:
- *                    [
- *                      { "id": 1, "name": "유저1" },
- *                      { "id": 2, "name": "유저2" },
- *                      { "id": 3, "name": "유저3" }
- *                    ]
+ *                  result:
+ *                    type: string
+ *                    example: "0000"
+ *                  reason:
+ *                    type: string
+ *                    example: "success"
+ *                  data:
+ *                    type: object
+ *                    example:
+ *                      {
+ *                        "HITS": 3,
+ *                        "CONTENTS": [{
+ *                            "CODE_ID": "CA_01",
+ *                            "CODE_NAME": "도시락"
+ *                          },
+ *                          {
+ *                            "CODE_ID": "CA_02",
+ *                            "CODE_NAME": "김밥"
+ *                          },
+ *                          {
+ *                            "CODE_ID": "CA_03",
+ *                            "CODE_NAME": "샌드위치"
+ *                          }
+ *                        ]
+ *                      }
  */
-itemRouter.get("/get-items-with-price", itemController.getItemWithPrice)
-
-/**
- * @swagger
- *  /api/item/get-items-with-title:
- *    get:
- *      summary: "물건명을 이용하여 물건 조회"
- *      description: ""
- *      tags: [Items]
- *      parameters:
- *      - in: query
- *        name: title
- *        required: true
- *        description: 물건에 포함된 이름
- *        schema:
- *          type: string
- *      responses:
- *        "200":
- *        description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                ok:
- *                  type: boolean
- *                users:
- *                  type: object
- *                  example:
- *                    [
- *                      { "id": 1, "name": "유저1" },
- *                      { "id": 2, "name": "유저2" },
- *                      { "id": 3, "name": "유저3" }
- *                    ]
- */
-
-itemRouter.get("/get-item-with-title", itemController.getItemWithTitle)
-
-/**
- * @swagger
- *  /api/item/get-category-data:
- *    get:
- *      summary: "현재 지원하는 카테고리 정보 조회"
- *      description: ""
- *      tags: [Items]
- *      responses:
- *        "200":
- *        description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                ok:
- *                  type: boolean
- *                users:
- *                  type: object
- *                  example:
- *                    [
- *                      { "id": 1, "name": "유저1" },
- *                      { "id": 2, "name": "유저2" },
- *                      { "id": 3, "name": "유저3" }
- *                    ]
- */
-
 itemRouter.get("/get-category-data", itemController.getCategoryData)
-
-/**
- * @swagger
- *  /api/item/get-items-with-category:
- *   get:
- *    summary: "현재 선택한 카테고리에 맞는 물건 선택"
- *    description: ""
- *    tags: [Items]
- *    parameters:
- *    - in: query
- *      name: category
- *      required: true
- *      description: 물건의 카테고리
- *      schema:
- *        type: string
- *    responses:
- *      "200":
- *      description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              ok:
- *                type: boolean
- *              users:
- *                type: object
- *                example:
- *                  [
- *                    { "id": 1, "name": "유저1" },
- *                    { "id": 2, "name": "유저2" },
- *                    { "id": 3, "name": "유저3" }
- *                  ]
- */
-
-itemRouter.get("/get-items-with-category", itemController.getItemWithCategory)
 
 /**
  * @swagger
@@ -228,22 +170,30 @@ itemRouter.get("/get-items-with-category", itemController.getItemWithCategory)
  *        type: string
  *    responses:
  *      "200":
- *      description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              ok:
- *                type: boolean
- *              users:
- *                type: object
- *                example:
- *                  [
- *                    { "id": 1, "name": "유저1" },
- *                    { "id": 2, "name": "유저2" },
- *                    { "id": 3, "name": "유저3" }
- *                  ]
+ *        description: 컨텐츠 상세정보 노출
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                result:
+ *                  type: string
+ *                  example: "0000"
+ *                reason:
+ *                  type: string
+ *                  example: "success"
+ *                data:
+ *                  type: object
+ *                  example:
+ *                    {
+ *                        "HITS": 1,
+ *                        "CONTENTS": [{
+ *                        "ITEM_NAME": "도)백종원데리마요덮밥",
+ *                        "ITEM_PRICE": "3900",
+ *                        "ITEM_IMAGE": "http://bgf-cu.xcache.kinxcdn.com/product/8809196616079.jpg",
+ *                        "ITEM_ID": "14947"
+ *                        }]
+ *                    }
  */
 
 itemRouter.get("/get-item-detail", itemController.getItemDetail)

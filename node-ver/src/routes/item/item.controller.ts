@@ -20,7 +20,8 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     from: from_price,
     to: to_price,
     category,
-    title
+    title,
+    sort
   } = req.query
 
   try {
@@ -47,6 +48,10 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     }
     if (!isEmpty(title)) {  // 상품명이 있을 때,
       sql += ` and item_name like '%${title}%'`
+    }
+    if (!isEmpty(sort)) {
+      if (sort === 'price_desc') sql += ` order by item_price desc` // 가격 내림차순
+      else if (sort === 'price_asc') sql += ` order by item_price asc`  // 가격 오름차순
     }
 
     console.log('[masonms] sql: ', sql)
