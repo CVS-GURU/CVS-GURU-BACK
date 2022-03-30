@@ -3,9 +3,9 @@ const dev:Sequrity = {
 }
 
 const dbConnection:DbConnection = {
-  host: 'localhost',
-  user: 'cvs_user',
-  password: 'Cvs1234!@#$',
+  host: '10.1.193.1',
+  user: 'dev',
+  password: 'Mysql1234%',
   database: 'cvsguru'
 }
 

@@ -17,7 +17,7 @@ CREATE TABLE `item_info` (
   `item_price` decimal(10,0) DEFAULT NULL COMMENT '금액',
   `item_image` varchar(100) DEFAULT NULL COMMENT '물건이미지',
   `item_description` varchar(1000) DEFAULT NULL COMMENT '상품설명',
-  `insert_date` timestamp NULL DEFAULT NULL COMMENT '상품추가시간',
+  `insert_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '상품추가시간',
   PRIMARY KEY (`item_id`),
   KEY `item_info_FK` (`store_kind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;

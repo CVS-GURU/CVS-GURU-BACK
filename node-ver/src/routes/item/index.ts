@@ -3,6 +3,48 @@ const itemController = require("./item.controller")
 
 /**
  * @swagger
+ *  /api/item/get-items:
+ *    get:
+ *      summary: "상품 통합검색"
+ *      description: "각종 필터를 이용한 상품의 통합검색 조회"
+ *      tags: [Items]
+ *      parameters:
+ *      - in: query
+ *        name: from
+ *        required: true
+ *        description: 최소가격
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: to
+ *        required: true
+ *        description: 최대가격
+ *        schema:
+ *          type: string
+ *      responses:
+ *        "200":
+ *          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                result:
+ *                  type: string
+ *                users:
+ *                  type: object
+ *                  example:
+ *                    [
+ *                      { "id": 1, "name": "유저1" },
+ *                      { "id": 2, "name": "유저2" },
+ *                      { "id": 3, "name": "유저3" }
+ *                    ]
+ */
+itemRouter.get("/get-items", itemController.getItems)
+
+
+/**
+ * @swagger
  *  /api/item/get-items-with-price:
  *    get:
  *      summary: "가격대를 이용하여 물건 조회"

@@ -14,13 +14,62 @@ const connection = mysql.createPool({
   database: config.dbConnection.database
 })
 
-exports.getItemsWithFilter = (req: express.Request, res:express.Response) => {
+exports.getItems = (req: express.Request, res:express.Response) => {
   const {
-    store
-
+    store,
+    from: from_price,
+    to: to_price,
+    category,
+    title
   } = req.query
 
-  isEmpty(store)
+  try {
+    let sql = `
+      select item_name as ITEM_NAME,
+            item_price as ITEM_PRICE,
+            item_image as ITEM_IMAGE,
+            item_id as ITEM_ID
+      from item_info
+      where 3=3
+    `
+
+    if (!isEmpty(store)) {  // 편의점 정보 있을 때,
+      sql += ` and store_kind = '${store}'`
+    }
+    if (!isEmpty(from_price)) { // 최소가격 있을 때,
+      sql += ` and item_price >= '${from_price}'`
+    }
+    if (!isEmpty(to_price)) { // 최대가격 있을 때,
+      sql += ` and item_price <= '${to_price}'`
+    }
+    if (!isEmpty(category)) { // 카테고리 있을 때,
+      sql += ` and item_category = '${category}'`
+    }
+    if (!isEmpty(title)) {  // 상품명이 있을 때,
+      sql += ` and item_name like '%${title}%'`
+    }
+
+    console.log('[masonms] sql: ', sql)
+    connection.promise().query(sql)
+    .then( (result: any) => {
+      if (result[0].length === 0) {
+        return res.json(makeResponseFormat('0000', [], 0))
+      } else {
+        return res.json(makeResponseFormat('0000', result[0], result[0].length))
+      }
+    })
+    .catch((err) => {
+      console.log('[masonms] error: ', err)
+      connection.end()
+      return res.json(makeResponseFormat('9999', [], 0, err))
+    })
+    .then( () => {
+      console.log('[masonms] finally then')
+    });
+  } catch (error) {
+    connection.end()
+    return res.json(makeResponseFormat('9999', [], 0, error))
+  }
 }
 
 exports.getItemWithPrice = (req: express.Request, res:express.Response) => {
