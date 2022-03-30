@@ -10,7 +10,8 @@ const connection = mysql.createPool({
   host: config.dbConnection.host,
   user: config.dbConnection.user,
   password: config.dbConnection.password,
-  database: config.dbConnection.database
+  database: config.dbConnection.database,
+  multipleStatements: true
 })
 
 exports.getItems = (req: express.Request, res:express.Response) => {
@@ -20,8 +21,10 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     to: to_price,
     category,
     title,
-    sort
-  } = req.query
+    sort,
+    page,
+    page_size
+  }: requestItemParams = req.query
 
   try {
     let sql = `
@@ -48,18 +51,32 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     if (!isEmpty(title)) {  // 상품명이 있을 때,
       sql += ` and item_name like '%${title}%'`
     }
-    if (!isEmpty(sort)) {
+
+    const totalCountSql = sql;  // 정렬기준 및 limit 없이 전체 카운트를 위한 쿼리
+
+    if (!isEmpty(sort)) { // 정렬기준 있을 때,
       if (sort === 'price_desc') sql += ` order by item_price desc` // 가격 내림차순
       else if (sort === 'price_asc') sql += ` order by item_price asc`  // 가격 오름차순
     }
+    
+    let defaultPage = 0
+    let defaultPageSize = 20
+
+    if (!isEmpty(page_size) && page_size !== undefined && parseInt(page_size, 10) >= 1) {
+      defaultPageSize = parseInt(page_size, 10)
+    }
+    if (!isEmpty(page) && page !== undefined && parseInt(page, 10) >= 1) {
+      defaultPage = parseInt(page, 10) - 1
+    }
+    sql += ` limit ${defaultPageSize} offset ${defaultPage * defaultPageSize}`
 
     console.log('[masonms] sql: ', sql)
-    connection.promise().query(sql)
+    connection.promise().query(`${totalCountSql};${sql}`)
     .then( (result: any) => {
-      if (result[0].length === 0) {
+      if (result[1].length === 0) {
         return res.json(makeResponseFormat('0000', [], 0))
       } else {
-        return res.json(makeResponseFormat('0000', result[0], result[0].length))
+        return res.json(makeResponseFormat('0000', result[0][1], result[0][0].length))
       }
     })
     .catch((err) => {

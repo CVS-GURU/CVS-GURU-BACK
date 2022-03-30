@@ -7,3 +7,14 @@ interface DbConnection {
   password: string
   database: string
 }
+
+interface requestItemParams {
+  store?: string
+  from?: string
+  to?: string
+  category?: string
+  title?: string
+  sort?: string
+  page?: string
+  page_size?: string
+}
