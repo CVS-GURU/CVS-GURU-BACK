@@ -46,6 +46,20 @@ const itemController = require("./item.controller")
  *        schema:
  *          type: string
  *          example: price_desc | price_asc
+ *      - in: query
+ *        name: page
+ *        required: false
+ *        description: 페이지 넘버
+ *        schema:
+ *          type: string
+ *          example: 1
+ *      - in: query
+ *        name: page_size
+ *        required: false
+ *        description: 한페이지에 노출 할 상품 수
+ *        schema:
+ *          type: string
+ *          example: 10
  *      responses:
  *        "200":
  *          description: 파라미터로 보내는 값의 여부 및 내용에 따라 달라짐
