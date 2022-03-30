@@ -42,6 +42,33 @@ const itemController = require("./item.controller")
  */
 itemRouter.get("/get-items", itemController.getItems)
 
+/**
+ * @swagger
+ *  /api/item/get-items-recently:
+ *    get:
+ *      summary: "최근 상품 조회"
+ *      description: "입력날짜 순 최근 20개의 상품을 조회한다"
+ *      tags: [Items]
+ *      responses:
+ *        "200":
+ *          description: 사용자가 서버로 전달하는 값에 따라 결과 값은 다릅니다. (유저 삭제)
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                result:
+ *                  type: string
+ *                users:
+ *                  type: object
+ *                  example:
+ *                    [
+ *                      { "id": 1, "name": "유저1" },
+ *                      { "id": 2, "name": "유저2" },
+ *                      { "id": 3, "name": "유저3" }
+ *                    ]
+ */
+itemRouter.get("/get-items-recently", itemController.getItemRecently)
 
 /**
  * @swagger
@@ -82,7 +109,7 @@ itemRouter.get("/get-items", itemController.getItems)
  *                      { "id": 3, "name": "유저3" }
  *                    ]
  */
-itemRouter.get("/get-item-with-price", itemController.getItemWithPrice)
+itemRouter.get("/get-items-with-price", itemController.getItemWithPrice)
 
 /**
  * @swagger
@@ -151,7 +178,7 @@ itemRouter.get("/get-category-data", itemController.getCategoryData)
 
 /**
  * @swagger
- *  /api/item/get-item-with-category:
+ *  /api/item/get-items-with-category:
  *   get:
  *    summary: "현재 선택한 카테고리에 맞는 물건 선택"
  *    description: ""
@@ -183,7 +210,7 @@ itemRouter.get("/get-category-data", itemController.getCategoryData)
  *                  ]
  */
 
-itemRouter.get("/get-item-with-category", itemController.getItemWithCategory)
+itemRouter.get("/get-items-with-category", itemController.getItemWithCategory)
 
 /**
  * @swagger

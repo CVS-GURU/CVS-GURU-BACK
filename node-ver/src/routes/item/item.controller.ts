@@ -241,3 +241,38 @@ exports.getItemDetail = (req: express.Request, res:express.Response) => {
     return res.json(makeResponseFormat('9999', [], 0, error))
   }
 }
+
+exports.getItemRecently = (req: express.Request, res:express.Response) => {
+  try {
+    const sql = `
+      select item_name as ITEM_NAME,
+                item_price as ITEM_PRICE,
+                item_image as ITEM_IMAGE,
+                item_id as ITEM_ID
+          from item_info
+          where 3=3
+      order by insert_date desc
+      limit 20
+    `
+
+    connection.promise().query(sql)
+    .then( (result: any) => {
+      if (result[0].length === 0) {
+        return res.json(makeResponseFormat('0000', [], 0))
+      } else {
+        return res.json(makeResponseFormat('0000', result[0], result[0].length))
+      }
+    })
+    .catch((err) => {
+      console.log('[masonms] error: ', err)
+      connection.end()
+      return res.json(makeResponseFormat('9999', [], 0, err))
+    })
+    .then( () => {
+      console.log('[masonms] finally then')
+    });
+  } catch (error) {
+    connection.end()
+    return res.json(makeResponseFormat('9999', [], 0, error))
+  }
+}
