@@ -6,16 +6,16 @@ import { isEmpty } from '../../utils/helpers'
 const { makeResponseFormat } = require('../../../middleware/MakeResponse')
 
 exports.getItems = (req: express.Request, res:express.Response) => {
-  // const tempArray = Object.keys(req.query)
-  // const tempMap: any = []
-  // tempArray.map((key: string) => {
-  //   const jsonData: any = {}
-  //   const value = req.query[key] as string
-  //   jsonData[key] = querystring.unescape(value)
-  //   tempMap.push(jsonData)
-  // })
+  const tempArray = Object.keys(req.query)
+  const tempMap: any = []
+  tempArray.map((key: string) => {
+    const jsonData: any = {}
+    const value = req.query[key] as string
+    jsonData[key] = querystring.unescape(value)
+    tempMap.push(jsonData)
+  })
 
-  // console.log('[masonms] ')
+  console.log('[masonms] tempMap: ', tempMap)
   const {
     store,
     from: from_price,
