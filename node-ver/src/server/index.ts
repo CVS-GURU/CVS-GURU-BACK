@@ -1,6 +1,5 @@
 import 'module-alias/register';
 import express from 'express'; 
-import mysql from 'mysql2'
 
 const api = require('../routes')
 
@@ -22,16 +21,14 @@ const { swaggerUi, specs } = require('../../middleware/Swagger')
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 
-// app.use('/user', userController)
-
 app.get('/', (req: express.Request, res: express.Response) => { 
   res.send('Hello World'); 
-}); 
+});
 
 app.post('/api/ping', (req: express.Request, res: express.Response) => { 
   res.send('post test')  
 });
 
-app.listen(port, () => { 
+app.listen(port, () => {
   console.log(`app listening on port ${port} and mode ${config.dataMode}`); 
 })

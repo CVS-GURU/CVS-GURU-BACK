@@ -4,6 +4,7 @@ CREATE TABLE `user_info` (
   `user_id` varchar(30) NOT NULL COMMENT '유저아이디',
   `password` varchar(300) NOT NULL COMMENT '비밀번호',
   `user_name` varchar(100) NOT NULL COMMENT '유저이름',
+  `user_email` varchar(100) NOT NULL COMMENT '유저이메일',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 

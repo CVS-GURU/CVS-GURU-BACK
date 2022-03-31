@@ -30,8 +30,11 @@ export default class JwtService {
   // user type정의 필요
   static createJWT = (user: any) => {
     const token = jwt.sign(
-      {id: user.id},
-    'cvs_guru_token'
+      {id: user.user_id},
+      'cvs_guru_token',
+      {
+        expiresIn: user.expire_date
+      }
     )
 
     return token

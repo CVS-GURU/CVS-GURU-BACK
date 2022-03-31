@@ -1,20 +1,20 @@
 import express from 'express'
-import mysql from 'mysql2';
-const config = require('@config/key');
-
+import querystring from 'querystring'
+import pool from '../../../middleware/MysqlConnection'
 import { isEmpty } from '../../utils/helpers'
 
 const { makeResponseFormat } = require('../../../middleware/MakeResponse')
 
-const connection = mysql.createPool({
-  host: config.dbConnection.host,
-  user: config.dbConnection.user,
-  password: config.dbConnection.password,
-  database: config.dbConnection.database,
-  multipleStatements: true
-})
-
 exports.getItems = (req: express.Request, res:express.Response) => {
+  const tempArray = Object.keys(req.query)
+  const tempMap: any = []
+  tempArray.map((key: string) => {
+    const jsonData: any = {}
+    const value = req.query[key] as string
+    jsonData[key] = querystring.unescape(value)
+    tempMap.push(jsonData)
+  })
+
   const {
     store,
     from: from_price,
@@ -24,7 +24,7 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     sort,
     page,
     page_size
-  }: requestItemParams = req.query
+  }: requestItemParams = tempMap
 
   try {
     let sql = `
@@ -70,26 +70,31 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     }
     sql += ` limit ${defaultPageSize} offset ${defaultPage * defaultPageSize}`
 
+    const queries: string[] = []
+    queries.push(totalCountSql)
+    queries.push(sql)
+
     console.log('[masonms] sql: ', sql)
-    connection.promise().query(`${totalCountSql};${sql}`)
+    pool.transaction(queries)
+    // connection.promise().query(`${totalCountSql};${sql}`)
     .then( (result: any) => {
       if (result[1].length === 0) {
-        return res.json(makeResponseFormat('0000', [], 0))
+        return res.json(makeResponseFormat('0000', {CONTENTS: [], HITS: 0}))
       } else {
-        return res.json(makeResponseFormat('0000', result[0][1], result[0][0].length))
+        return res.json(makeResponseFormat('0000', {CONTENTS: result[0][1], HITS: result[0][0].length}))
       }
     })
-    .catch((err) => {
+    .catch((err: any) => {
       console.log('[masonms] error: ', err)
-      connection.end()
-      return res.json(makeResponseFormat('9999', [], 0, err))
+      // connection.end()
+      return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
   } catch (error) {
-    connection.end()
-    return res.json(makeResponseFormat('9999', [], 0, error))
+    // connection.end()
+    return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, error))
   }
 }
 
@@ -101,26 +106,28 @@ exports.getCategoryData = (req: express.Request, res:express.Response) => {
       from base_code
       where code_id like 'CA%';
     `
-
-    connection.promise().query(sql)
+    const queries: string[] = []
+    queries.push(sql)
+    pool.transaction(queries)
+    // connection.promise().query(sql)
     .then( (result: any) => {
       if (result[0].length === 0) {
-        return res.json(makeResponseFormat('0000', [], 0))
+        return res.json(makeResponseFormat('0000', {CONTENTS: [], HITS: 0}))
       } else {
-        return res.json(makeResponseFormat('0000', result[0], result[0].length))
+        return res.json(makeResponseFormat('0000', {CONTENTS: result[0], HITS: result[0].length}))
       }
     })
-    .catch((err) => {
+    .catch((err: any) => {
       console.log('[masonms] error: ', err)
-      connection.end()
-      return res.json(makeResponseFormat('9999', [], 0, err))
+      // connection.end()
+      return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
-  } catch (error) {
-    connection.end()
-    return res.json(makeResponseFormat('9999', [], 0, error))
+  } catch (error: any) {
+    // connection.end()
+    return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, error))
   }
 }
 
@@ -139,25 +146,29 @@ exports.getItemDetail = (req: express.Request, res:express.Response) => {
       where item_id = '${id}';
     `
 
-    connection.promise().query(sql)
+    const queries: string[] = []
+    queries.push(sql)
+
+    pool.transaction(queries)
+    // connection.promise().query(sql)
     .then( (result: any) => {
       if (result[0].length === 0) {
-        return res.json(makeResponseFormat('0000', [], 0))
+        return res.json(makeResponseFormat('0000', {CONTENTS: [], HITS: 0}))
       } else {
-        return res.json(makeResponseFormat('0000', result[0], result[0].length))
+        return res.json(makeResponseFormat('0000', {CONTENTS: result[0], HITS: result[0].length}))
       }
     })
-    .catch((err) => {
+    .catch((err: any) => {
       console.log('[masonms] error: ', err)
-      connection.end()
-      return res.json(makeResponseFormat('9999', [], 0, err))
+      // connection.end()
+      return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
-  } catch (error) {
-    connection.end()
-    return res.json(makeResponseFormat('9999', [], 0, error))
+  } catch (error: any) {
+    // connection.end()
+    return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, error))
   }
 }
 
@@ -173,25 +184,28 @@ exports.getItemRecently = (req: express.Request, res:express.Response) => {
       order by insert_date desc
       limit 20
     `
+    const queries: string[] = []
+    queries.push(sql)
 
-    connection.promise().query(sql)
+    pool.transaction(queries)
+    // connection.promise().query(sql)
     .then( (result: any) => {
       if (result[0].length === 0) {
-        return res.json(makeResponseFormat('0000', [], 0))
+        return res.json(makeResponseFormat('0000', {CONTENTS: [], HITS: 0}))
       } else {
-        return res.json(makeResponseFormat('0000', result[0], result[0].length))
+        return res.json(makeResponseFormat('0000', {CONTENTS: result[0], HITS: result[0].length}))
       }
     })
-    .catch((err) => {
+    .catch((err: any) => {
       console.log('[masonms] error: ', err)
-      connection.end()
-      return res.json(makeResponseFormat('9999', [], 0, err))
+      // connection.end()
+      return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, err))
     })
     .then( () => {
       console.log('[masonms] finally then')
     });
-  } catch (error) {
-    connection.end()
-    return res.json(makeResponseFormat('9999', [], 0, error))
+  } catch (error: any) {
+    // connection.end()
+    return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, error))
   }
 }
