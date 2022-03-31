@@ -8,15 +8,17 @@ const userController = require("./user.controller")
  *      summary: "유저 로그인"
  *      description: "사용자의 로그인을 진행한다"
  *      tags: [Users]
+ *      consumes:
+ *      - application/json
  *      parameters:
- *      - in: query
+ *      - in: body
  *        name: user_id
  *        required: true
  *        description: 유저 아이디
  *        schema:
  *          type: string
  *          example: wsadqeqe
- *      - in: query
+ *      - in: body
  *        name: password
  *        required: true
  *        description: 비밀번호(sha256 암호화해서 전송)
@@ -60,36 +62,38 @@ userRouter.post("/login", userController.login)
  *      summary: "회원가입"
  *      description: "사용자 회원가입"
  *      tags: [Users]
+ *      consumes:
+ *      - application/json
  *      parameters:
- *      - in: query
+ *      - in: body
  *        name: user_id
  *        required: true
  *        description: 유저 아이디
  *        schema:
  *          type: string
  *          example: wsadqeqe
- *      - in: query
+ *      - in: body
  *        name: password
  *        required: true
  *        description: 비밀번호(sha256 암호화해서 전송)
  *        schema:
  *          type: string
  *          example: 03ac674216f3e15c761ee1a5e255f067.....
- *      - in: query
+ *      - in: body
  *        name: user_name
  *        required: true
  *        description: 사용자 이름
  *        schema:
  *          type: string
  *          example: 명성
- *      - in: query
+ *      - in: body
  *        name: user_email
  *        required: true
  *        description: 사용자 이메일
  *        schema:
  *          type: string
  *          example: abcd@naver.com
- *      - in: query
+ *      - in: body
  *        name: user_profile_image
  *        required: false
  *        description: 사용자 프로필사진
@@ -117,5 +121,43 @@ userRouter.post("/login", userController.login)
  */
 userRouter.put("/signup", userController.signup)
 
-userRouter.get("/id-check", userController.idCheck)
+/**
+ * @swagger
+ *  /api/user/id-check:
+ *    post:
+ *      summary: "회원아이디 가입여부 확인"
+ *      description: "회원가입을 위한 아이디의 가입여부를 확인합니다."
+ *      tags: [Users]
+ *      consumes:
+ *      - application/json
+ *      parameters:
+ *      - in: body
+ *        name: user_id
+ *        required: true
+ *        description: 유저 아이디
+ *        schema:
+ *          type: string
+ *          example: wsadqeqe
+ *      responses:
+ *        "200":
+ *          description: 아이디 확인 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  result:
+ *                    type: string
+ *                    example: "0000"
+ *                  reason:
+ *                    type: string
+ *                    example: "가입이 가능한 아이디입니다."
+ *                  data:
+ *                    type: object
+ *                    example:
+ *                      {}
+ */
+userRouter.post("/id-check", userController.idCheck)
+
+userRouter.put("/change-user-info", userController.changeUserInfo)
 module.exports = userRouter

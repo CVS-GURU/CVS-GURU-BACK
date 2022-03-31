@@ -183,6 +183,10 @@ exports.signup = (req: express.Request, res: express.Response) => {
   }
 }
 
+exports.changeUserInfo = (req: express.Request, res: express.Response) => {
+
+}
+
 /*
 const checkToken = (req: express.Request, res: express.Response) => {
   try {

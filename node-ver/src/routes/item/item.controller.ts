@@ -6,15 +6,16 @@ import { isEmpty } from '../../utils/helpers'
 const { makeResponseFormat } = require('../../../middleware/MakeResponse')
 
 exports.getItems = (req: express.Request, res:express.Response) => {
-  const tempArray = Object.keys(req.query)
-  const tempMap: any = []
-  tempArray.map((key: string) => {
-    const jsonData: any = {}
-    const value = req.query[key] as string
-    jsonData[key] = querystring.unescape(value)
-    tempMap.push(jsonData)
-  })
+  // const tempArray = Object.keys(req.query)
+  // const tempMap: any = []
+  // tempArray.map((key: string) => {
+  //   const jsonData: any = {}
+  //   const value = req.query[key] as string
+  //   jsonData[key] = querystring.unescape(value)
+  //   tempMap.push(jsonData)
+  // })
 
+  // console.log('[masonms] ')
   const {
     store,
     from: from_price,
@@ -24,7 +25,7 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     sort,
     page,
     page_size
-  }: requestItemParams = tempMap
+  }: requestItemParams = req.query
 
   try {
     let sql = `
@@ -81,7 +82,7 @@ exports.getItems = (req: express.Request, res:express.Response) => {
       if (result[1].length === 0) {
         return res.json(makeResponseFormat('0000', {CONTENTS: [], HITS: 0}))
       } else {
-        return res.json(makeResponseFormat('0000', {CONTENTS: result[0][1], HITS: result[0][0].length}))
+        return res.json(makeResponseFormat('0000', {CONTENTS: result[0], HITS: result[1].length}))
       }
     })
     .catch((err: any) => {
