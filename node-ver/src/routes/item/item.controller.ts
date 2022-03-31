@@ -7,15 +7,12 @@ const { makeResponseFormat } = require('../../../middleware/MakeResponse')
 
 exports.getItems = (req: express.Request, res:express.Response) => {
   const tempArray = Object.keys(req.query)
-  const tempMap: any = []
+  const tempMap: any = {}
   tempArray.map((key: string) => {
-    const jsonData: any = {}
     const value = req.query[key] as string
-    jsonData[key] = querystring.unescape(value)
-    tempMap.push(jsonData)
+    tempMap[key] = querystring.unescape(value)
   })
 
-  console.log('[masonms] tempMap: ', tempMap)
   const {
     store,
     from: from_price,
@@ -25,7 +22,7 @@ exports.getItems = (req: express.Request, res:express.Response) => {
     sort,
     page,
     page_size
-  }: requestItemParams = req.query
+  }: requestItemParams = tempMap
 
   try {
     let sql = `
