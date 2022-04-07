@@ -159,5 +159,55 @@ userRouter.put("/signup", userController.signup)
  */
 userRouter.post("/id-check", userController.idCheck)
 
+/**
+ * @swagger
+ *  /api/user/change-user-info:
+ *    put:
+ *      summary: "회원정보 변경"
+ *      description: "회원의 닉네임, 이미지 사진 주소를 변경한다"
+ *      tags: [Users]
+ *      consumes:
+ *      - application/json
+ *      parameters:
+ *      - in: header
+ *        name: 토큰
+ *        required: true
+ *        description: 유저 토큰
+ *        schema:
+ *          type: string
+ *          example: Bearer asjdkblaksdjf....
+ *      - in: body
+ *        name: user_nickname
+ *        required: false
+ *        description: 유저 닉네임
+ *        schema:
+ *          type: string
+ *          example: 칠봉이
+ *      - in: body
+ *        name: user_profile_image
+ *        required: false
+ *        description: 유저 프로필사진 이름
+ *        schema:
+ *          type: string
+ *          example: 123.jpg
+ *      responses:
+ *        "200":
+ *          description: 회원정보 변경 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  result:
+ *                    type: string
+ *                    example: "0000"
+ *                  reason:
+ *                    type: string
+ *                    example: "회원정보가 변경되었습니다."
+ *                  data:
+ *                    type: object
+ *                    example:
+ *                      {}
+ */
 userRouter.put("/change-user-info", userController.changeUserInfo)
 module.exports = userRouter

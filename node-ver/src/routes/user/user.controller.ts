@@ -129,7 +129,7 @@ exports.idCheck = (req: express.Request, res: express.Response) => {
 }
 
 exports.signup = (req: express.Request, res: express.Response) => {
-  const { user_id, password, user_name, user_email, user_profile_image } = req.body
+  const { user_id, password, user_name, user_email, user_profile_image, user_nickname } = req.body
   if (isEmpty(user_id) || isEmpty(password) || isEmpty(user_name) || isEmpty) {
     return res.json(makeResponseFormat('9999', {}, '필수입력정보 없음'))
   }
@@ -150,8 +150,8 @@ exports.signup = (req: express.Request, res: express.Response) => {
         // 회원가입 insert 진행
         queries.pop()
         const insertSql = `
-          insert into user_info (user_id, password, user_name, user_email, user_profile_image)
-          values ('${user_id}', '${password}', '${user_name}', '${user_email}', '${user_profile_image}');
+          insert into user_info (user_id, password, user_name, user_email, user_profile_image, user_nickname)
+          values ('${user_id}', '${password}', '${user_name}', '${user_email}', '${user_profile_image}', '${user_nickname}');
         `
         queries.push(insertSql)
         pool.transaction(queries)
@@ -184,7 +184,43 @@ exports.signup = (req: express.Request, res: express.Response) => {
 }
 
 exports.changeUserInfo = (req: express.Request, res: express.Response) => {
+  const token = JwtService.extractTokenFromRequest(req)
+  const check = JwtService.decodeJWT(token as string) as any
+  try {
+    if (check === null) { // 토큰 검증결과 비정상 토큰
+      return res.json(makeResponseFormat('5000', {}, '권한이 없습니다.'))
+    } else { // 정상토큰일때 개인정보 수정(닉네임과 프로필사진의 변경)
+      const { id } = check
+      const { user_nickname, user_profile_image } = req.body
+      const sql = `
+        update user_info
+        set user_nickname = '${user_nickname}',
+        user_profile_image = '${user_profile_image}'
+        where user_id = '${id}'
+      `
+      const queries: string[] = []
+      queries.push(sql)
 
+      pool.transaction(queries)
+      // connection.promise().query(idCheckSql)
+      .then( (result: any) => {
+        if (result[0].length === 0) { 
+          return res.json(makeResponseFormat('9999', {}, '네트워크 에러.'))
+        } else {  // 회원정보 업데이트 완료
+          return res.json(makeResponseFormat('0000', {}, '회원정보 변경이 완료되었습니다.'))
+        }
+      })
+      .catch((err: any) => {
+        return res.json(makeResponseFormat('9999', {}, err))
+      })
+      .then( () => {
+        console.log('[masonms] finally then')
+      });
+    }  
+  } catch (error) {
+    console.log('[masonms] try error: ', error)
+    return res.json(makeResponseFormat('9999', [], 0, error))  
+  }
 }
 
 /*
