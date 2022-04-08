@@ -129,7 +129,7 @@ exports.idCheck = (req: express.Request, res: express.Response) => {
 }
 
 exports.signup = (req: express.Request, res: express.Response) => {
-  const { user_id, password, user_name, user_email, user_profile_image, user_nickname } = req.body
+  const { user_id, password, user_name, user_email, user_profile_image, user_nickname: nickname } = req.body
   if (isEmpty(user_id) || isEmpty(password) || isEmpty(user_name) || isEmpty) {
     return res.json(makeResponseFormat('9999', {}, '필수입력정보 없음'))
   }
@@ -149,6 +149,7 @@ exports.signup = (req: express.Request, res: express.Response) => {
       if (result[0].length === 0) { // 기존회원정보 없음
         // 회원가입 insert 진행
         queries.pop()
+        const user_nickname = isEmpty(nickname) ? user_name : nickname
         const insertSql = `
           insert into user_info (user_id, password, user_name, user_email, user_profile_image, user_nickname)
           values ('${user_id}', '${password}', '${user_name}', '${user_email}', '${user_profile_image}', '${user_nickname}');

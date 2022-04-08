@@ -1,68 +1,94 @@
--- cvsguru.user_info definition
+DB테이블 생성 스크립트
 
 CREATE TABLE `user_info` (
-  `user_id` varchar(30) NOT NULL COMMENT '유저아이디',
-  `password` varchar(300) NOT NULL COMMENT '비밀번호',
-  `user_name` varchar(100) NOT NULL COMMENT '유저이름',
-  `user_email` varchar(100) NOT NULL COMMENT '유저이메일',
-  `user_profile_image` varchar(1000) DEFAULT NULL,
-  `user_nickname` varchar(100) DEFAULT NULL COMMENT '유저 닉네임',
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- cvsguru.item_info definition
-
-CREATE TABLE `item_info` (
-  `item_id` varchar(100) NOT NULL COMMENT '물건ID',
-  `store_kind` varchar(100) NOT NULL COMMENT '편의점종류',
-  `item_name` varchar(100) NOT NULL,
-  `item_category` varchar(100) DEFAULT NULL COMMENT '카테고리',
-  `item_price` decimal(10,0) DEFAULT NULL COMMENT '금액',
-  `item_image` varchar(100) DEFAULT NULL COMMENT '물건이미지',
-  `item_description` varchar(1000) DEFAULT NULL COMMENT '상품설명',
-  `insert_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '상품추가시간',
-  PRIMARY KEY (`item_id`),
-  KEY `item_info_FK` (`store_kind`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- cvsguru.item_rate_user definition
-
-CREATE TABLE `item_rate_user` (
-  `item_id` varchar(100) NOT NULL COMMENT '물건ID',
-  `user_id` varchar(30) NOT NULL COMMENT '유저ID',
-  `item_score` int DEFAULT NULL COMMENT '평점',
-  `item_comment` varchar(1000) DEFAULT NULL COMMENT '후기',
-  PRIMARY KEY (`item_id`,`user_id`),
-  KEY `item_rate_user_FK` (`user_id`),
-  CONSTRAINT `item_rate_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
-  CONSTRAINT `item_rate_user_FK_1` FOREIGN KEY (`item_id`) REFERENCES `item_info` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- cvsguru.item_rate_group definition
-
-CREATE TABLE `item_rate_group` (
-  `item_id` varchar(100) NOT NULL COMMENT '물건ID',
-  `item_score` varchar(100) DEFAULT NULL COMMENT '평점',
-  `score_count` varchar(100) DEFAULT NULL COMMENT '물건평점 수',
-  PRIMARY KEY (`item_id`),
-  CONSTRAINT `item_rate_group_FK` FOREIGN KEY (`item_id`) REFERENCES `item_info` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- cvsguru.store_info definition
-
-CREATE TABLE `store_info` (
-  `store_id` varchar(100) NOT NULL COMMENT '편의점ID',
-  `store_kind` varchar(100) NOT NULL COMMENT '편의점종류',
-  `store_name` varchar(100) NOT NULL COMMENT '편의점이름',
-  PRIMARY KEY (`store_id`,`store_kind`),
-  KEY `store_info_FK` (`store_kind`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- cvsguru.base_code definition
+  `user_id` varchar(30) NOT NULL  COMMENT '유저아이디',
+  `password`  varchar(300)  NOT NULL  COMMENT '비밀번호',
+  `user_name` varchar(300)  NOT NULL  COMMENT '유저이름',
+  `user_email`  varchar(100)  NOT NULL  COMMENT '유저이메일',
+  `user_profile_image`  varchar(1000) NULL  COMMENT '유저프로필사진',
+  `user_nickname` varchar(100)  NOT NULL  COMMENT '유저닉네임',
+  PRIMARY KEY (user_id)
+);
 
 CREATE TABLE `base_code` (
-  `code_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '공통코드',
-  `code_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '코드이름',
-  `description` varchar(1000) DEFAULT NULL,
-  PRIMARY KEY (`code_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `code_id` varchar(100)  NOT NULL,
+  `code_name` varchar(100)  NULL,
+  `description` varchar(1000) NULL,
+  PRIMARY KEY (code_id)
+);
+
+CREATE TABLE `item_info` (
+  `item_id` varchar(100)  NOT NULL  COMMENT '상품의 아이디',
+  `store_kind`  varchar(100)  NULL  COMMENT '상품이 있는 편의점 종류',
+  `item_name` varchar(100)  NOT NULL  COMMENT '상품의 이름',
+  `item_category` varchar(100)  NULL  COMMENT '상품의 카테고리 종류',
+  `item_price`  decimal(10, 0)  NOT NULL  COMMENT '상품의 가격',
+  `item_image`  varchar(100)  NULL  COMMENT '상품의 이미지 주소',
+  `item_description`  varchar(1000) NULL  COMMENT '상품에 대한 설명',
+  `insert_date` timestamp NULL  COMMENT '상품이 추가된 날짜',
+  PRIMARY KEY (item_id)
+);
+
+CREATE TABLE `item_rate_user` (
+  `seq` int(10) NOT NULL  auto_increment  COMMENT '후기에 대한 아이디',
+  `user_id` varchar(30) NOT NULL  COMMENT '후기를 입력한 유저의 아이디',
+  `item_id` varchar(100)  NOT NULL  COMMENT '후기를 입력한 상품의 아이디',
+  `item_score`  tinyint NULL  COMMENT '선택한 평점',
+  `item_comment`  varchar(1000) NULL  COMMENT '입력한 후기',
+  `delete_yn` varchar(5)  NOT NULL  DEFAULT 'N' COMMENT '후기 삭제 여부 확인(Y, N)',
+  `insert_date` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP COMMENT '후기를 입력한 시간',
+  `update_date` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP COMMENT '후기를 수정한 시간',
+  PRIMARY KEY (seq)
+);
+
+CREATE TABLE `store_info` (
+  `store_id`  varchar(100)  NOT NULL  COMMENT '편의점아이디',
+  `store_kind`  varchar(100)  NOT NULL  COMMENT '편의점종류',
+  `store_name`  varchar(100)  NOT NULL  COMMENT '편의점이름',
+  PRIMARY KEY (store_id, store_kind)
+);
+
+CREATE TABLE `item_rate_user_like` (
+  `select_user_id`  varchar(30) NOT NULL  COMMENT '좋아요를 누른 유저 아이디',
+  `seq` int(10) NOT NULL  COMMENT '좋아요를 누른 후기의 아이디',
+  `target_user_id`  varchar(30) NOT NULL  COMMENT '후기를 작성한 유저의 아이디',
+  `item_id` varchar(100)  NOT NULL  COMMENT '후기가 입력된 상품의 아이디',
+  PRIMARY KEY (select_user_id)
+);
+
+
+ALTER TABLE `item_rate_user` ADD CONSTRAINT `FK_user_info_TO_item_rate_user_1` FOREIGN KEY (
+  `user_id`
+)
+REFERENCES `user_info` (
+  `user_id`
+);
+
+ALTER TABLE `item_rate_user` ADD CONSTRAINT `FK_item_info_TO_item_rate_user_1` FOREIGN KEY (
+  `item_id`
+)
+REFERENCES `item_info` (
+  `item_id`
+);
+
+ALTER TABLE `item_rate_user_like` ADD CONSTRAINT `FK_item_rate_user_TO_item_rate_user_like_1` FOREIGN KEY (
+  `seq`
+)
+REFERENCES `item_rate_user` (
+  `seq`
+);
+
+ALTER TABLE `item_rate_user_like` ADD CONSTRAINT `FK_item_rate_user_TO_item_rate_user_like_2` FOREIGN KEY (
+  `target_user_id`
+)
+REFERENCES `item_rate_user` (
+  `user_id`
+);
+
+ALTER TABLE `item_rate_user_like` ADD CONSTRAINT `FK_item_rate_user_TO_item_rate_user_like_3` FOREIGN KEY (
+  `item_id`
+)
+REFERENCES `item_rate_user` (
+  `item_id`
+);
+
