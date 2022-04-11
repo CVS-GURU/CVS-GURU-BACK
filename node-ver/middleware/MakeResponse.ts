@@ -27,6 +27,12 @@ const makeResponseFormat = (
       reason: '비밀번호가 다릅니다.',
       data: {}
     })
+    case '8001':
+      return ({
+        result,
+        reason: '필수정보가 없습니다.',
+        data: data.data.toString()
+      })
     default:
       return ({
         result,

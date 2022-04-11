@@ -14,7 +14,7 @@ exports.login = async (req: express.Request, res: express.Response) => {
   const passCheck = checkMandatory(mandatoryKeys)  
 
   if (!passCheck.isPass) {
-    return res.json(makeResponseFormat('9999', {data: passCheck.nonPassArray}, '필수입력정보 없음 '))
+    return res.json(makeResponseFormat('8001', {data: passCheck.nonPassArray}, '필수입력정보 없음 '))
   }
   try {
     const sql = `
@@ -96,9 +96,15 @@ exports.login = async (req: express.Request, res: express.Response) => {
 
 exports.idCheck = (req: express.Request, res: express.Response) => {
   const { user_id } = req.body
-  if (isEmpty(user_id)) {
-    return res.json(makeResponseFormat('9999', {}, '필수입력정보 없음'))
+  const mandatoryKeys = {
+    user_id
   }
+  const passCheck = checkMandatory(mandatoryKeys)  
+
+  if (!passCheck.isPass) {
+    return res.json(makeResponseFormat('8001', {data: passCheck.nonPassArray}, '필수입력정보 없음 '))
+  }
+
   try {
     const idCheckSql = `
       select user_id as USER_ID
@@ -136,8 +142,14 @@ exports.idCheck = (req: express.Request, res: express.Response) => {
 
 exports.signup = (req: express.Request, res: express.Response) => {
   const { user_id, password, user_name, user_email, user_profile_image, user_nickname: nickname } = req.body
-  if (isEmpty(user_id) || isEmpty(password) || isEmpty(user_name) || isEmpty) {
-    return res.json(makeResponseFormat('9999', {}, '필수입력정보 없음'))
+  const mandatoryKeys = {
+        user_id,
+        password,
+        user_name
+      }
+  const passCheck = checkMandatory(mandatoryKeys)  
+  if (!passCheck.isPass) {
+    return res.json(makeResponseFormat('8001', {data: passCheck.nonPassArray}, '필수입력정보 없음 '))
   }
   try {
     const idCheckSql = `

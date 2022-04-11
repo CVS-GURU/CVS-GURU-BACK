@@ -212,6 +212,51 @@ itemRouter.get("/get-category-data", itemController.getCategoryData)
 
 itemRouter.get("/get-item-detail", itemController.getItemDetail)
 
+/**
+ * @swagger
+ *  /api/item/write-item-comment:
+ *   put:
+ *    summary: "상품 후기 작성"
+ *    description: ""
+ *    tags: [Items]
+ *    parameters:
+ *    - in: body
+ *      name: item_id
+ *      required: true
+ *      description: 상품의 id
+ *      schema:
+ *        type: string
+ *    - in: body
+ *      name: item_score
+ *      required: true
+ *      description: 후기 점수(5점을 기준으로 소수점으로 처리)
+ *      schema:
+ *        type: string
+ *    - in: body
+ *      name: item_comment
+ *      required: false
+ *      description: 후기 코멘트
+ *      schema:
+ *        type: string
+ *    responses:
+ *      "200":
+ *        description: 후기 입력 완료
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                result:
+ *                  type: string
+ *                  example: "0000"
+ *                reason:
+ *                  type: string
+ *                  example: "success"
+ *                data:
+ *                  type: object
+ *                  example:
+ *                    {}
+ */
 itemRouter.put("/write-item-comment", itemController.writeItemComment)
 
 module.exports = itemRouter

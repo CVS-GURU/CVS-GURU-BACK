@@ -228,7 +228,7 @@ exports.writeItemComment = (req: express.Request, res:express.Response) => {
       const passCheck = checkMandatory(mandatoryKeys)  
 
       if (!passCheck.isPass) {
-        return res.json(makeResponseFormat('9999', {data: passCheck.nonPassArray}, '필수입력정보 없음 '))
+        return res.json(makeResponseFormat('8001', {data: passCheck.nonPassArray}, '필수입력정보 없음 '))
       }
 
       const itemCheckSql = `
