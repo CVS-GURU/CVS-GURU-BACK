@@ -28,9 +28,8 @@ CREATE TABLE `item_rate_user` (
 	`seq`	int(10)	NOT NULL	DEFAULT auto_increment	COMMENT '후기에 대한 seq 컬럼, 아이디라고 보면된다',
 	`user_id`	varchar(30)	NOT NULL	COMMENT '후기를 입력한 유저의 아이디',
 	`item_id`	varchar(100)	NOT NULL	COMMENT '후기를 입력한 상품의 아이디',
-	`item_score`	tinyint	NULL	COMMENT '선택한 평점',
+	`item_score`	float	NOT NULL	COMMENT '선택한 평점',
 	`item_comment`	varchar(1000)	NULL	COMMENT '입력한 후기',
-	`delete_yn`	varchar(5)	NOT NULL	DEFAULT 'N'	COMMENT '후기 삭제 여부 확인(Y, N)',
 	`insert_date`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '후기를 입력한 시간',
 	`update_date`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '후기를 수정한 시간'
 );

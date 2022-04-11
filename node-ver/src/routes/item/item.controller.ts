@@ -1,7 +1,8 @@
 import express from 'express'
 import querystring from 'querystring'
 import pool from '../../../middleware/MysqlConnection'
-import { isEmpty } from '../../utils/helpers'
+import JwtService from '../../../middleware/JwtService'
+import { checkMandatory, isEmpty } from '../../utils/helpers'
 
 const { makeResponseFormat } = require('../../../middleware/MakeResponse')
 
@@ -205,5 +206,72 @@ exports.getItemRecently = (req: express.Request, res:express.Response) => {
   } catch (error: any) {
     // connection.end()
     return res.json(makeResponseFormat('9999', {CONTENTS: [], HITS: 0}, error))
+  }
+}
+
+exports.writeItemComment = (req: express.Request, res:express.Response) => {
+  const token = JwtService.extractTokenFromRequest(req)
+  const check = JwtService.decodeJWT(token as string) as any
+
+  try {
+    if (check === null) { // 토큰 검증결과 비정상 토큰
+      return res.json(makeResponseFormat('5000', {}, '권한이 없습니다.'))
+    } else {  // 정상토큰일때 후기 작성
+      const { id: user_id } = check
+      const { item_id, item_score, item_comment } = req.body
+
+      const mandatoryKeys = {
+        user_id,
+        item_id,
+        item_score,
+      }
+      const passCheck = checkMandatory(mandatoryKeys)  
+
+      if (!passCheck.isPass) {
+        return res.json(makeResponseFormat('9999', {data: passCheck.nonPassArray}, '필수입력정보 없음 '))
+      }
+
+      const itemCheckSql = `
+        select *
+        from item_info
+        where item_id = '${item_id}'
+      `
+      
+      const queries: string[] = []
+      queries.push(itemCheckSql)
+
+      pool.transaction(queries)
+      .then( (result: any) => {
+        if (result[0].length === 0) { // 기존 상품정보 없음
+          return res.json(makeResponseFormat('5001', {}, '상품 ID가 잘못되었습니다.'))
+        } else {  // 기존 상품정보 있음
+          queries.pop()
+          const comment = isEmpty(item_comment) ? '' : `'${item_comment}'`
+          const insertSql = `
+            insert into item_rate_user (user_id, item_id, item_score, item_comment)
+            values ('${user_id}', '${item_id}', ${item_score}, ${comment})
+          `
+          queries.push(insertSql)
+          pool.transaction(queries)
+          .then( (result: any) => {
+            if (result[0].length === 0) { // insert 완료 후 result[0]에 데이터 값 없음
+              return res.json(makeResponseFormat('0000', {}, '후기 입력이 완료되었습니다.'))
+            } else {  // insert 완료 후 result[0]에 데이터 값 없음
+              return res.json(makeResponseFormat('0000', {}, '후기 입력이 완료되었습니다.'))
+            }
+          })
+        }
+      })
+      .catch((err: any) => {
+        console.log('[masonms] idCheck error: ', err)
+        // connection.end()
+        return res.json(makeResponseFormat('9999', {}, err))
+      })
+      .then( () => {
+        console.log('[masonms] finally then')
+      });
+    }
+  } catch (error) {
+    return res.json(makeResponseFormat('9999', {}, error))
   }
 }

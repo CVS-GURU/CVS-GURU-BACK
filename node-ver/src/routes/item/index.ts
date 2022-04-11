@@ -212,4 +212,6 @@ itemRouter.get("/get-category-data", itemController.getCategoryData)
 
 itemRouter.get("/get-item-detail", itemController.getItemDetail)
 
+itemRouter.put("/write-item-comment", itemController.writeItemComment)
+
 module.exports = itemRouter
