@@ -1,12 +1,11 @@
 import 'module-alias/register';
 import express from 'express';
-
+import cookieParser from 'cookie-parser';
 const api = require('../routes');
 
 const app = express();
 const port = 3031;
 
-import cookieParser from 'cookie-parser';
 const cors = require('cors');
 const config = require('@config/key');
 

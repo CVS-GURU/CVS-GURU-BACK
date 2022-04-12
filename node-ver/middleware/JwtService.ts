@@ -1,5 +1,6 @@
-import express from 'express';
-import jwt from 'jsonwebtoken';
+import express from 'express'
+import jwt from 'jsonwebtoken'
+import { parseCookies } from '../src/utils/helpers'
 
 export default class JwtService {
   static getUserIdFromRequest = (req: express.Request): string | null => {
@@ -12,6 +13,11 @@ export default class JwtService {
   }
 
   static extractTokenFromRequest = (req: express.Request): string | undefined => {
+    if (req.headers.cookie) {
+      const parseCookie = parseCookies(req.headers.cookie)
+      const token = parseCookie.access_token
+      return token
+    }
     const TOKEN_PREFIX = 'Bearer '
     const auth = req.headers.authorization
     const token = auth?.includes(TOKEN_PREFIX) ? auth.split(TOKEN_PREFIX)[1] : auth
@@ -29,15 +35,10 @@ export default class JwtService {
 
   // user type정의 필요
   static createJWT = (user: any) => {
-    const token = jwt.sign(
-      {id: user.user_id},
-      'cvs_guru_token',
-      {
-        expiresIn: user.expire_date
-      }
-    )
+    const token = jwt.sign({ id: user.user_id }, 'cvs_guru_token', {
+      expiresIn: user.expire_date,
+    })
 
     return token
   }
-
 }
