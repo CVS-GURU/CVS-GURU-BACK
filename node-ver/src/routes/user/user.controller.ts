@@ -22,7 +22,8 @@ exports.login = async (req: express.Request, res: express.Response) => {
             password as PASSWORD,
             user_name as USER_NAME,
             user_email as USER_EMAIL,
-            user_profile_image as USER_PROFILE_IMAGE
+            user_profile_image as USER_PROFILE_IMAGE,
+            user_nickname as USER_NICKNAME
       from user_info
       where user_id = '${user_id}'
     `
@@ -68,7 +69,8 @@ exports.login = async (req: express.Request, res: express.Response) => {
                 ACCESS_TOKEN: accessToken,
                 REFRESH_TOKEN: refreshToken,
                 USER_EMAIL: result[0][0].USER_EMAIL,
-                USER_PROFILE_IMAGE: result[0][0].USER_PROFILE_IMAGE
+                USER_PROFILE_IMAGE: result[0][0].USER_PROFILE_IMAGE,
+                USER_NICKNAME: result[0][0].USER_NICKNAME
               }
             }))
           } else {
@@ -226,6 +228,56 @@ exports.changeUserInfo = (req: express.Request, res: express.Response) => {
           return res.json(makeResponseFormat('9999', {}, '네트워크 에러.'))
         } else {  // 회원정보 업데이트 완료
           return res.json(makeResponseFormat('0000', {}, '회원정보 변경이 완료되었습니다.'))
+        }
+      })
+      .catch((err: any) => {
+        return res.json(makeResponseFormat('9999', {}, err))
+      })
+      .then( () => {
+        console.log('[masonms] finally then')
+      });
+    }  
+  } catch (error) {
+    console.log('[masonms] try error: ', error)
+    return res.json(makeResponseFormat('9999', [], 0, error))  
+  }
+}
+
+exports.getUserInfo = (req: express.Request, res: express.Response) => {
+  const token = JwtService.extractTokenFromRequest(req)
+  const check = JwtService.decodeJWT(token as string) as any
+  try {
+    if (check === null) { // 토큰 검증결과 비정상 토큰
+      return res.json(makeResponseFormat('5000', {}, '권한이 없습니다.'))
+    } else { // 정상토큰일때 개인정보 수정(닉네임과 프로필사진의 변경)
+      const { id } = check
+      const sql = `
+        select user_id as USER_ID,
+            user_name as USER_NAME,
+            user_email as USER_EMAIL,
+            user_profile_image as USER_PROFILE_IMAGE,
+            user_nickname as USER_NICKNAME
+        from user_info
+        where user_id = '${id}'
+      `
+      const queries: string[] = []
+      queries.push(sql)
+
+      pool.transaction(queries)
+      // connection.promise().query(idCheckSql)
+      .then( (result: any) => {
+        if (result[0].length === 0) { 
+          return res.json(makeResponseFormat('9999', {}, '네트워크 에러.'))
+        } else {  // 회원정보 업데이트 완료
+          return res.json(makeResponseFormat('0000', {
+            USER_DATA: {
+              USER_ID: result[0][0].USER_ID,
+              USER_NAME: result[0][0].USER_NAME,
+              USER_EMAIL: result[0][0].USER_EMAIL,
+              USER_PROFILE_IMAGE: result[0][0].USER_PROFILE_IMAGE,
+              USER_NICKNAME: result[0][0].USER_NICKNAME
+            }
+          }))
         }
       })
       .catch((err: any) => {

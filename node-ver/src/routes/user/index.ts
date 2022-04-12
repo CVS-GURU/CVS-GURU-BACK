@@ -49,7 +49,8 @@ const userController = require("./user.controller")
  *                          "ACCESS_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....",
  *                          "REFRESH_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....",
  *                          "USER_EMAIL": "wsadqeqe@naver.com",
- *                          "USER_PROFILE_IMAGE": "https://ajakjsadjkdsf...."
+ *                          "USER_PROFILE_IMAGE": "https://ajakjsadjkdsf....",
+ *                          "USER_NICKNAME": "명성"
  *                        }
  *                      }
  */
@@ -210,4 +211,50 @@ userRouter.post("/id-check", userController.idCheck)
  *                      {}
  */
 userRouter.put("/change-user-info", userController.changeUserInfo)
+
+/**
+ * @swagger
+ *  /api/user/get-user-info:
+ *    get:
+ *      summary: "유저정보 조회"
+ *      description: "access token을 이용해 유저의 정보를 조회한다"
+ *      tags: [Users]
+ *      consumes:
+ *      - application/json
+ *      parameters:
+ *      - in: header
+ *        name: token
+ *        required: true
+ *        description: 유저 토큰
+ *        schema:
+ *          type: string
+ *          example: Bearer asjdkblaksdjf....
+ *      responses:
+ *        "200":
+ *          description: 유저정보 조회 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  result:
+ *                    type: string
+ *                    example: "0000"
+ *                  reason:
+ *                    type: string
+ *                    example: "success"
+ *                  data:
+ *                    type: object
+ *                    example:
+ *                      {
+ *                        "USER_DATA": {
+ *                          "USER_ID": "wsadqeqe",
+ *                          "USER_NAME": "명성",
+ *                          "USER_EMAIL": "wsadqeqe@naver.com",
+ *                          "USER_PROFILE_IMAGE": "https://ajakjsadjkdsf....",
+ *                          "USER_NICKNAME": "명성"
+ *                        }
+ *                      }
+ */
+userRouter.get("/get-user-info", userController.getUserInfo)
 module.exports = userRouter
