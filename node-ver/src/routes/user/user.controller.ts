@@ -270,12 +270,8 @@ exports.changeUserInfo = (req: express.Request, res: express.Response) => {
 }
 
 exports.getUserInfo = (req: express.Request, res: express.Response) => {
-  console.log('getUserInfo =', req.headers)
   const token = JwtService.extractTokenFromRequest(req)
-  console.log(token)
-
   const check = JwtService.decodeJWT(token as string) as any
-  console.log('token =', token)
   try {
     if (check === null) {
       // 토큰 검증결과 비정상 토큰

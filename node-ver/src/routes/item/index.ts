@@ -1,5 +1,5 @@
-const itemRouter = require("express").Router()
-const itemController = require("./item.controller")
+const itemRouter = require('express').Router()
+const itemController = require('./item.controller')
 
 /**
  * @swagger
@@ -87,7 +87,7 @@ const itemController = require("./item.controller")
  *                          }]
  *                      }
  */
-itemRouter.get("/get-items", itemController.getItems)
+itemRouter.get('/get-items', itemController.getItems)
 
 /**
  * @swagger
@@ -123,7 +123,7 @@ itemRouter.get("/get-items", itemController.getItems)
  *                          }]
  *                      }
  */
-itemRouter.get("/get-items-recently", itemController.getItemRecently)
+itemRouter.get('/get-items-recently', itemController.getItemRecently)
 
 /**
  * @swagger
@@ -166,7 +166,7 @@ itemRouter.get("/get-items-recently", itemController.getItemRecently)
  *                        ]
  *                      }
  */
-itemRouter.get("/get-category-data", itemController.getCategoryData)
+itemRouter.get('/get-category-data', itemController.getCategoryData)
 
 /**
  * @swagger
@@ -210,7 +210,7 @@ itemRouter.get("/get-category-data", itemController.getCategoryData)
  *                    }
  */
 
-itemRouter.get("/get-item-detail", itemController.getItemDetail)
+itemRouter.get('/get-item-detail', itemController.getItemDetail)
 
 /**
  * @swagger
@@ -257,6 +257,8 @@ itemRouter.get("/get-item-detail", itemController.getItemDetail)
  *                  example:
  *                    {}
  */
-itemRouter.put("/write-item-comment", itemController.writeItemComment)
+itemRouter.put('/write-item-comment', itemController.writeItemComment)
+
+itemRouter.get('/get-item-comment', itemController.getItemComment)
 
 module.exports = itemRouter
